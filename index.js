@@ -95,10 +95,20 @@ async function run() {
 
     //comments post
     app.post('/userComment', async(req, res) => {
-      const query = {}
-      const result = await userCommentsCollection.insertOne(query)
+      const userComment = req.body
+      const result = await userCommentsCollection.insertOne(userComment)
       res.send(result)
     })
+
+   //  comments get by status id
+   app.get('/userComment/:statusId', async(req, res) => {
+      const postStatusId = req.params.statusId;
+      const statusId = {statusId: postStatusId}
+      const userComment = userCommentsCollection.find(statusId)
+      const curser = await userComment.toArray()
+      res.send(curser)
+
+   })
 
 
 
