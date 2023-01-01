@@ -27,7 +27,11 @@ async function run() {
     const userPhotoStatusCollection = client
       .db("Social-media")
       .collection("statusPhoto");
-      const userCommentsCollection = client.db("Social-media").collection("userComment")
+    const userCommentsCollection = client
+      .db("Social-media")
+      .collection("userComment");
+    const userLikeCollection = client.db("Social-media").collection("userLike");
+    const userLoveCollection = client.db("Social-media").collection("userLove");
 
     // registerData post
     app.post("/registerData", async (req, res) => {
@@ -35,6 +39,13 @@ async function run() {
       const result = await userRegisterCollection.insertOne(userDat);
       res.send(result);
     });
+
+    // social loging user put
+    // app.put('/socialRegisterData', async(req, res) => {
+    //   const socialUsr = req.body;
+    //   const result = await userRegisterCollection.insertOne(result)
+    //   res.send(result)
+    // })
 
     //  registerData get
     app.get("/registerData", async (req, res) => {
@@ -62,7 +73,11 @@ async function run() {
         $set: about,
       };
 
-      const result = await userRegisterCollection.updateOne(filter, updoc, upsert);
+      const result = await userRegisterCollection.updateOne(
+        filter,
+        updoc,
+        upsert
+      );
       res.send(result);
 
       console.log(result);
@@ -94,25 +109,62 @@ async function run() {
     });
 
     //comments post
-    app.post('/userComment', async(req, res) => {
-      const userComment = req.body
-      const result = await userCommentsCollection.insertOne(userComment)
-      res.send(result)
+    app.post("/userComment", async (req, res) => {
+      const userComment = req.body;
+      const result = await userCommentsCollection.insertOne(userComment);
+      res.send(result);
+    });
+
+    //  comments get by status id
+    app.get("/userComment/:statusId", async (req, res) => {
+
+      const postStatusId = req.params.statusId;
+      const statusId = { statusId: postStatusId };
+      const userComment = userCommentsCollection.find(statusId);
+      const curser = await userComment.toArray();
+      res.send(curser);
+
+    });
+
+    //  like post
+    app.post("/userLike", async (req, res) => {
+
+      const like = req.body;
+      const result = await userLikeCollection.insertOne(like);
+      res.send(result);
+
+    });
+     
+    // like get by status id
+    app.get('/userLike/:statusId', async(req, res) => {
+       const postStatusId = req.params.statusId
+       const statusId = {statusId: postStatusId}
+       const userLike =  userLikeCollection.find(statusId)
+       const result = await userLike.toArray()
+       res.send(result)
     })
 
-   //  comments get by status id
-   app.get('/userComment/:statusId', async(req, res) => {
-      const postStatusId = req.params.statusId;
-      const statusId = {statusId: postStatusId}
-      const userComment = userCommentsCollection.find(statusId)
-      const curser = await userComment.toArray()
-      res.send(curser)
+    // love post
+    app.post("/userLove", async (req, res) => {
 
-   })
+      const like = req.body;
+      const result = await userLoveCollection.insertOne(like);
+      res.send(result);
+
+    });
+     
+    // like get by status id
+    app.get('/userLove/:statusId', async(req, res) => {
+       const postStatusId = req.params.statusId
+       const statusId = {statusId: postStatusId}
+       const userLike =  userLoveCollection.find(statusId)
+       const result = await userLike.toArray()
+       res.send(result)
+    })
 
 
-
-  } finally {
+  } 
+  finally {
   }
 }
 run().catch((error) => console.log(error));
