@@ -27,6 +27,9 @@ async function run() {
     const userPhotoStatusCollection = client
       .db("Social-media")
       .collection("statusPhoto");
+    
+      const userTextStatusCollection = client.db('Social-media').collection("textStatus");
+      
     const userCommentsCollection = client
       .db("Social-media")
       .collection("userComment");
@@ -63,7 +66,7 @@ async function run() {
       res.send(curser);
     });
 
-    // aboutset by put
+    // aboutSet by put
     app.put("/userabout/:email", async (req, res) => {
       const email = req.params.email;
       const about = req.body;
@@ -82,6 +85,18 @@ async function run() {
 
       console.log(result);
     });
+
+    //textStatus Post
+    
+    app.post("/textStatus", async (req, res) => {
+       
+      const textStatus = req.body;
+      const result = await userTextStatusCollection.insertOne(textStatus);
+      res.send(result)
+
+    })
+ 
+
 
     // statusWithPhoto post
     app.post("/statusPhoto/", async (req, res) => {
