@@ -66,6 +66,17 @@ async function run() {
       res.send(curser);
     });
 
+
+    //all user get
+    app.get('/registerData', async (req, res) => {
+
+      const query = {}
+      const result = await userRegisterCollection.find(query).toArray()
+      res.send(result)
+       
+    })
+
+
     // aboutSet by put
     app.put("/userabout/:email", async (req, res) => {
       const email = req.params.email;
